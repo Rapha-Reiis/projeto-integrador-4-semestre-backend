@@ -19,16 +19,17 @@ export class UserController {
     ) {}
 
     create = async (req: Request, res: Response) => {
-        const { username, email, name, password, bio, premium } = req.body;
+        const { username, email, name, password, bio } = req.body;
         const filename = req.file?.filename;
 
+        // Toda conta nasce sem premium; o premium só é ativado pelo pagamento
         const input: UserCreateDTO = {
             email,
             name,
             password,
             username,
             bio: bio ?? null,
-            premium: Boolean(premium === 'true' || premium === true),
+            premium: false,
             profile_image_url: filename ?? null,
         };
 

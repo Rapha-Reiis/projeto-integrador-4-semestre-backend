@@ -20,7 +20,10 @@ export class UpgradeUserToPremiumService {
         };
 
         await this.userRepo.update(update, user.id);
-        await this.sendEmail.sendPremiumActiveted(user.email, user.username);
+        // E-mail é opcional: se o SMTP não estiver configurado, só registra o erro e o premium continua ativado
+        this.sendEmail
+            .sendPremiumActiveted(user.email, user.username)
+            .catch((err) => console.error('[email] falha ao enviar premium ativado:', err.message));
     }
 
     private add30Days() {

@@ -6,12 +6,15 @@ import { controllers } from '../../factories/controllers';
 import { instanceToken } from '../../factories/make-auth';
 import { userCreateBody, userUpdateBody } from '../../core/Entities/user-entity';
 import { ValidateRequest } from '../../Middleware/validate-body.middleware';
+import { UserValidationMiddleware } from '../../Middleware/user-validation.middleware';
+import { ZodUserValidation } from '../../infra/Validations/ZodValidations/User/ZodUserValidation';
 
 class RoutesUser {
     public routes = Router();
     private userController = controllers.userController;
     private auth = new AuthMiddleware(instanceToken);
     private upload = multer(multerConfig);
+    private userValidation = new UserValidationMiddleware(new ZodUserValidation());
     constructor() {
         this.initRoutes();
     }
@@ -21,6 +24,8 @@ class RoutesUser {
             '/',
             this.upload.single('profile_image_url'),
             ValidateRequest.validateBody([], userCreateBody),
+            // Valida os campos com o schema Zod (tamanho mínimo, e-mail válido etc.)
+            (req, res, next) => this.userValidation.ValidationCreate(req, res, next),
             this.userController.create,
         );
 

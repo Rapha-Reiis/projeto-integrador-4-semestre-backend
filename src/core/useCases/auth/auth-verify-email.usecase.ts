@@ -24,6 +24,8 @@ export class AuthVerifyEmailUsecase {
         };
 
         await this.userRepo.update(data, user?.id!);
-        this.sendEmail.sendWelcomeEmail(user?.email!, user?.username!);
+        this.sendEmail
+            .sendWelcomeEmail(user?.email!, user?.username!)
+            .catch((err) => console.error('[email] falha ao enviar boas-vindas:', err.message));
     }
 }

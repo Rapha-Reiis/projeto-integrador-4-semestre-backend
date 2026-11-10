@@ -31,6 +31,8 @@ export type UserCreateDTO = {
     profile_image_url?: string | null;
     bio?: string | null;
     premium?: boolean;
+    email_verified?: boolean;
+    email_verified_at?: Date;
 };
 
 export type UserUpdateDTO = {

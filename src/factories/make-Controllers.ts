@@ -1,6 +1,7 @@
 import { UserRepoPrisma } from '../infra/Repositories/prisma/Repositories/user-repo-prisma';
 import { prisma } from '../infra/Repositories/prisma/client';
 import { RawgRepostiry } from '../infra/Repositories/Games/rawg-repository';
+import { IgdbRepository } from '../infra/Repositories/Games/igdb-repository';
 import { HashBcrypt } from '../infra/hash-bycript';
 import { UserCreateUseCase } from '../core/useCases/user/user-create.usecase';
 import { UserUpdateUseCase } from '../core/useCases/user/user-update.usecase';
@@ -53,7 +54,8 @@ import { getPaymentStatus } from '../core/useCases/payment/get-payment-status.us
 export function makeControllers() {
     // Repositorios
     const userRepo = new UserRepoPrisma(prisma);
-    const gameRepo = new RawgRepostiry();
+    // Fonte dos jogos: 'igdb' (padrão) ou 'rawg'
+    const gameRepo = process.env.GAME_PROVIDER === 'rawg' ? new RawgRepostiry() : new IgdbRepository();
     const userGameRepo = new UserGameRepoPrisma(gameRepo);
     const reviewRepo = new ReviwRepository(prisma);
     const reviewLikeRepo = new ReviewLikeRepository();

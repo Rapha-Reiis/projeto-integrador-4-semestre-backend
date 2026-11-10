@@ -23,18 +23,14 @@ export class UserCreateUseCase {
         if (data.profile_image_url) {
             data.profile_image_url = `${process.env.BASE_URL}/perfil-image/${data.profile_image_url}`;
         }
+        // Sem verificação de e-mail: a conta já nasce verificada e nenhum e-mail é enviado
+        data.email_verified = true;
+        data.email_verified_at = new Date();
+
         const newUser = await this.repository.create(data);
-        this.sendVerifyEmail(data, newUser.id);
 
         return {
             id: newUser.id,
         };
-    }
-
-    async sendVerifyEmail(data: UserCreateDTO, userId: string) {
-        const token = this.jwtToken.signEmailToken(userId);
-        const verifyUrl = `${process.env.BASE_URL_FRONT}/verify-email?token=${token}`;
-
-        await this.sendEmail.sendVerifyEmail(data.email, data.name, verifyUrl);
     }
 }
