@@ -1,6 +1,6 @@
 import { IUserRepository } from '../../../adapters/Repositories/Iuser-repository';
 import { VerifyUserService } from '../../../application/Services/user/verify-user.service';
-import { LocalImageStorage } from '../../../infra/Image/Local-image-storage';
+import { ImageStorage } from '../../../infra/Image/Image-storage';
 
 export class UserDeleteUsecase {
     constructor(
@@ -11,7 +11,7 @@ export class UserDeleteUsecase {
     async execute(userId: string) {
         const user = await this.verifyUser.VerifyId(userId);
 
-        if (user?.profile_image_url) LocalImageStorage.deleteByUrl(user.profile_image_url);
+        if (user?.profile_image_url) await ImageStorage.deleteByUrl(user.profile_image_url);
 
         await this.userRepo.deleteUser(userId);
     }

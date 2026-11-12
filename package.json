@@ -22,6 +22,7 @@
     "homepage": "https://github.com/Rapha-Reiis/projeto-integrador-4-semestre-backend#readme",
     "dependencies": {
         "@prisma/client": "^6.16.1",
+        "@supabase/supabase-js": "^2.119.0",
         "bcryptjs": "^3.0.2",
         "cors": "^2.8.5",
         "dotenv": "^17.2.1",

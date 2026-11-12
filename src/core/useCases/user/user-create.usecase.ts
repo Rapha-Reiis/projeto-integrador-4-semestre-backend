@@ -4,6 +4,7 @@ import { IUserRepository } from '../../../adapters/Repositories/Iuser-repository
 import { SendEmailService } from '../../../application/Services/email/sendEmailService';
 import { VerifyUserService } from '../../../application/Services/user/verify-user.service';
 import { UserCreateDTO } from '../../Entities/user-entity';
+import { ImageStorage } from '../../../infra/Image/Image-storage';
 import 'dotenv/config';
 
 export class UserCreateUseCase {
@@ -21,7 +22,7 @@ export class UserCreateUseCase {
         data.password = await this.hash.hashPassword(data.password);
 
         if (data.profile_image_url) {
-            data.profile_image_url = `${process.env.BASE_URL}/perfil-image/${data.profile_image_url}`;
+            data.profile_image_url = await ImageStorage.save(data.profile_image_url);
         }
         // Sem verificação de e-mail: a conta já nasce verificada e nenhum e-mail é enviado
         data.email_verified = true;
